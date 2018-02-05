@@ -4,22 +4,45 @@ import {
   Text,
   StyleSheet,
   View,
-  StatusBar
+  StatusBar,
+  Image
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import {fetchWeather} from './weatherApi'
 
+const iconNames = {
+  clear: 'md-sunny',
+  rain: 'md-rainy',
+  thunderstorm: 'md-thunderstorm',
+  clouds: 'md-cloudy',
+  snow: 'md-snow',
+  drizzle: 'md-umbrella',
+  haze: 'md-flash'
+}
+
 class App extends Component {
+
+  componentWillMount() {
+    this.setState({hideStatusBar: false})
+  }
 
   componentDidMount() {
     this.getLocation()
-    fetchWeather(-21,28)
+    // fetchWeather(-21,28).then(res => console.log(res))
+    // setInterval(() => {
+    //     this.setState({hideStatusBar: !this.state.hideStatusBar})
+    //   }, 1000
+    // )
   }
-
+  // <Icon name={this.state.weather ? iconNames[this.state.weather.description.toLowerCase()] : iconNames['clear']} size={100} color={'white'}></Icon>
   getLocation() {
     navigator.geolocation.getCurrentPosition(
-      (posData) => console.log(posData),
+      (posData) => fetchWeather(posData.coords.latitude, posData.coords.longitude)
+        .then(res => this.setState({
+          temp: res.temp,
+          weather: res.weather
+        })),
       (error) => console.log(error),
       {timeout: 10000}
     )
@@ -27,10 +50,10 @@ class App extends Component {
   render() {
     return(
       <View style={styles.container}>
-        <StatusBar hidden={true}/>
+        <StatusBar hidden={this.state.hideStatusBar}/>
         <View style={styles.header}>
-          <Icon name={'ios-sunny'} size={100} color={'white'}></Icon>
-          <Text style={styles.temp}>24°</Text>
+          <Image source={{uri: this.state.weather && this.state.weather.icon ? this.state.weather.icon : 'https://openweathermap.org/img/w/09d.png'}} style={{width: 75, height: 75}}/>
+          <Text style={styles.temp}>{this.state.temp ? this.state.temp : 0}°</Text>
         </View>
         <View style={styles.body}>
           <Text style={styles.title}>Build a <Text style={{color: 'red'}}>Fucking</Text> Weather App</Text>
