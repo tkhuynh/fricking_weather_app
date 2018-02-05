@@ -76,9 +76,9 @@ class App extends Component {
           <Image source={{uri: this.state.weather && this.state.weather.icon ? this.state.weather.icon : 'https://openweathermap.org/img/w/09d.png'}} style={{width: 75, height: 75}}/>
           <Text style={styles.temp}>{this.state.temp ? this.state.temp : '--'}°</Text>
         </View>
-        <View style={styles.header}>
-          <Text style={styles.sunText}>Sun rise: {this.state.weather && this.state.weather.sys && this.state.weather.sys.sunrise ? getTimeFromMilliseconds(this.state.weather.sys.sunrise) : '--'}</Text>
-          <Text style={styles.sunText}>Sun set: {this.state.weather && this.state.weather.sys && this.state.weather.sys.sunset ? getTimeFromMilliseconds(this.state.weather.sys.sunset) : '--'}</Text>
+        <View style={styles.sun}>
+          <Text style={styles.sunText}>Sunrise: {this.state.weather && this.state.weather.sys && this.state.weather.sys.sunrise ? getTimeFromMilliseconds(this.state.weather.sys.sunrise) : '--'}</Text>
+          <Text style={styles.sunText}> Sunset: {this.state.weather && this.state.weather.sys && this.state.weather.sys.sunset ? getTimeFromMilliseconds(this.state.weather.sys.sunset) : '--'}</Text>
         </View>
         <View style={styles.body}>
           <Text style={styles.title}>Build a <Text style={{color: 'red'}}>Fucking</Text> Weather App</Text>
@@ -117,7 +117,6 @@ const styles = StyleSheet.create({
   },
   sun: {
     alignItems: 'flex-start',
-    justifyContent: 'space-around', 
     flex: 1,
     alignItems: 'center',
   },
