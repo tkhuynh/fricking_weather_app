@@ -77,11 +77,12 @@ class App extends Component {
           <Text style={styles.temp}>{this.state.temp ? this.state.temp : '--'}°</Text>
         </View>
         <View style={styles.sun}>
+          <Text style={styles.description}>{this.state.weather && this.state.weather.description ? this.state.weather.description : '--'}</Text>
           <Text style={styles.sunText}>Sunrise: {this.state.weather && this.state.weather.sys && this.state.weather.sys.sunrise ? getTimeFromMilliseconds(this.state.weather.sys.sunrise) : '--'}</Text>
           <Text style={styles.sunText}> Sunset: {this.state.weather && this.state.weather.sys && this.state.weather.sys.sunset ? getTimeFromMilliseconds(this.state.weather.sys.sunset) : '--'}</Text>
         </View>
         <View style={styles.body}>
-          <Text style={styles.title}>Build a <Text style={{color: 'red'}}>Fucking</Text> Weather App</Text>
+          <Text style={styles.title}>Build a <Text style={{color: 'red'}}>Fricking</Text> Weather App</Text>
           <Text style={styles.subtitle}>Let's Make it Rain</Text>
         </View>
       </View>
@@ -124,6 +125,12 @@ const styles = StyleSheet.create({
     fontFamily: 'HelveticaNeue-Bold',
     fontSize: 22,
     color: 'white'
+  },
+  description: {
+    fontFamily: 'HelveticaNeue-Bold',
+    fontSize: 28,
+    color: 'white',
+    marginBottom: 15
   },
   body: {
     justifyContent: 'flex-end', 
