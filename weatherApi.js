@@ -7,7 +7,9 @@ export const fetchWeather = (lat, lon) => {
   return fetch(url)
     .then(res => res.json())
     .then(json => {
+      console.log(json)
       return ({
+        location: json.name,
         temp: Math.round(json.main.temp),
         weather: {
           description: json.weather[0].main,

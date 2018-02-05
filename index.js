@@ -29,17 +29,13 @@ class App extends Component {
 
   componentDidMount() {
     this.getLocation()
-    // fetchWeather(-21,28).then(res => console.log(res))
-    // setInterval(() => {
-    //     this.setState({hideStatusBar: !this.state.hideStatusBar})
-    //   }, 1000
-    // )
   }
   // <Icon name={this.state.weather ? iconNames[this.state.weather.description.toLowerCase()] : iconNames['clear']} size={100} color={'white'}></Icon>
   getLocation() {
     navigator.geolocation.getCurrentPosition(
       (posData) => fetchWeather(posData.coords.latitude, posData.coords.longitude)
         .then(res => this.setState({
+          location: res.location,
           temp: res.temp,
           weather: res.weather
         })),
@@ -51,6 +47,9 @@ class App extends Component {
     return(
       <View style={styles.container}>
         <StatusBar hidden={this.state.hideStatusBar}/>
+        <View style={styles.top}>
+          <Text style={styles.city}>{this.state.location ? this.state.location : 0}</Text>
+        </View>
         <View style={styles.header}>
           <Image source={{uri: this.state.weather && this.state.weather.icon ? this.state.weather.icon : 'https://openweathermap.org/img/w/09d.png'}} style={{width: 75, height: 75}}/>
           <Text style={styles.temp}>{this.state.temp ? this.state.temp : 0}°</Text>
@@ -68,6 +67,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFD017'
+  },
+  top: {
+    justifyContent: 'center', 
+    flex: 1,
+    alignItems: 'center',
+  },
+  city: {
+    fontFamily: 'HelveticaNeue-Bold',
+    fontSize: 30,
+    color: 'white'
   },
   header: {
     flexDirection: 'row',
