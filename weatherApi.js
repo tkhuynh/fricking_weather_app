@@ -12,6 +12,7 @@ export const fetchWeather = (lat, lon) => {
         location: json.name,
         temp: Math.round(json.main.temp),
         weather: {
+          sys: json.sys,
           description: json.weather[0].main,
           icon: json.weather[0].icon ? "https://openweathermap.org/img/w/" + json.weather[0].icon + ".png" : "https://openweathermap.org/img/w/09d.png"
         }

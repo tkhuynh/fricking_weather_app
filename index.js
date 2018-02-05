@@ -8,7 +8,7 @@ import {
   Image
 } from 'react-native';
 
-import Icon from 'react-native-vector-icons/Ionicons';
+import Spinner from 'react-native-loading-spinner-overlay';
 import {fetchWeather} from './weatherApi'
 
 const iconNames = {
@@ -21,10 +21,30 @@ const iconNames = {
   haze: 'md-flash'
 }
 
+function getTimeFromMilliseconds(milliseconds) {
+  let time = new Date(milliseconds * 1000)
+  let hour = time.getHours()
+  let min = time.getMinutes()
+  let ap = hour > 11 ? 'PM' : 'AM'
+  hour =  hour > 12 ? hour - 12 : hour 
+  min = min < 10 ? "0" + min : min
+  return hour + ":" + min + ap
+}
+
 class App extends Component {
 
+  constructor(props) {
+    super();
+    this.state = {
+      visible: true,
+      overlayColor: 'black'
+    };
+  }
+
   componentWillMount() {
-    this.setState({hideStatusBar: false})
+    this.setState({
+      hideStatusBar: false
+    })
   }
 
   componentDidMount() {
@@ -35,6 +55,7 @@ class App extends Component {
     navigator.geolocation.getCurrentPosition(
       (posData) => fetchWeather(posData.coords.latitude, posData.coords.longitude)
         .then(res => this.setState({
+          visible: false,
           location: res.location,
           temp: res.temp,
           weather: res.weather
@@ -46,13 +67,18 @@ class App extends Component {
   render() {
     return(
       <View style={styles.container}>
+        <Spinner visible={this.state.visible} textContent={"Loading..."} textStyle={{color: '#FFF'}} />
         <StatusBar hidden={this.state.hideStatusBar}/>
         <View style={styles.top}>
-          <Text style={styles.city}>{this.state.location ? this.state.location : 0}</Text>
+          <Text style={styles.city}>{this.state.location ? this.state.location : '--'}</Text>
         </View>
         <View style={styles.header}>
           <Image source={{uri: this.state.weather && this.state.weather.icon ? this.state.weather.icon : 'https://openweathermap.org/img/w/09d.png'}} style={{width: 75, height: 75}}/>
-          <Text style={styles.temp}>{this.state.temp ? this.state.temp : 0}°</Text>
+          <Text style={styles.temp}>{this.state.temp ? this.state.temp : '--'}°</Text>
+        </View>
+        <View style={styles.header}>
+          <Text style={styles.sunText}>Sun rise: {this.state.weather && this.state.weather.sys && this.state.weather.sys.sunrise ? getTimeFromMilliseconds(this.state.weather.sys.sunrise) : '--'}</Text>
+          <Text style={styles.sunText}>Sun set: {this.state.weather && this.state.weather.sys && this.state.weather.sys.sunset ? getTimeFromMilliseconds(this.state.weather.sys.sunset) : '--'}</Text>
         </View>
         <View style={styles.body}>
           <Text style={styles.title}>Build a <Text style={{color: 'red'}}>Fucking</Text> Weather App</Text>
@@ -87,6 +113,17 @@ const styles = StyleSheet.create({
   temp: {
     fontFamily: 'HelveticaNeue-Bold',
     fontSize: 45,
+    color: 'white'
+  },
+  sun: {
+    alignItems: 'flex-start',
+    justifyContent: 'space-around', 
+    flex: 1,
+    alignItems: 'center',
+  },
+  sunText: {
+    fontFamily: 'HelveticaNeue-Bold',
+    fontSize: 22,
     color: 'white'
   },
   body: {
