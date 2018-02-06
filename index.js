@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 
 import Spinner from 'react-native-loading-spinner-overlay';
-import {fetchWeather} from './weatherApi'
+import {fetchWeather, getRegionForCoordinates} from './weatherApi';
+import MapView from 'react-native-maps';
 
 const iconNames = {
   clear: 'md-sunny',
@@ -36,8 +37,14 @@ class App extends Component {
   constructor(props) {
     super();
     this.state = {
+      city: 'San Francisco',
       visible: true,
-      overlayColor: 'black'
+      overlayColor: 'black',
+      coord: {
+        latitude: 37.80,
+        longitude: -122.47
+      },
+      region: getRegionForCoordinates([{latitude: 37.80,longitude: -122.47}])
     };
   }
 
@@ -82,8 +89,19 @@ class App extends Component {
           <Text style={styles.sunText}> Sunset: {this.state.weather && this.state.weather.sys && this.state.weather.sys.sunset ? getTimeFromMilliseconds(this.state.weather.sys.sunset) : '--'}</Text>
         </View>
         <View style={styles.body}>
-          <Text style={styles.title}>Build a <Text style={{color: 'red'}}>Fricking</Text> Weather App</Text>
-          <Text style={styles.subtitle}>Let's Make it Rain</Text>
+          <MapView
+            initialRegion={this.state.region}
+            style={StyleSheet.absoluteFillObject}
+          >
+            <MapView.Marker
+              title={this.state.city}
+              coordinate={this.state.coord}
+              calloutOffset={{
+                x: -50,
+                y: -50
+              }}
+            />
+          </MapView>
         </View>
       </View>
     )
